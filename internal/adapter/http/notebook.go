@@ -19,8 +19,8 @@ import (
 
 const maxRequestBodyBytes = 1 << 20 // 1 MiB
 
-// NotebookService is the consumer-side contract the HTTP adapter needs. The
-// concrete implementation is usecase.NotebookUseCase.
+// NotebookService 是 HTTP adapter 需要的消费者侧契约，具体实现为
+// usecase.NotebookUseCase。
 type NotebookService interface {
 	Create(ctx context.Context, in usecase.CreateNotebookInput) (*domain.Notebook, error)
 	Get(ctx context.Context, id string) (*domain.Notebook, error)
@@ -39,7 +39,7 @@ func NewNotebookHandler(service NotebookService, validate *validator.Validate, l
 	return &NotebookHandler{service: service, validate: validate, log: log}
 }
 
-// Create handles POST /api/v1/notebooks.
+// Create 处理 POST /api/v1/notebooks。
 func (h *NotebookHandler) Create(w http.ResponseWriter, r *http.Request) {
 	var req createNotebookRequest
 	if !h.decodeAndValidate(w, r, &req) {
@@ -59,7 +59,7 @@ func (h *NotebookHandler) Create(w http.ResponseWriter, r *http.Request) {
 	writeJSON(w, http.StatusCreated, dataResponse{Data: toNotebookResponse(notebook)})
 }
 
-// List handles GET /api/v1/notebooks?limit=&offset=.
+// List 处理 GET /api/v1/notebooks?limit=&offset=。
 func (h *NotebookHandler) List(w http.ResponseWriter, r *http.Request) {
 	limit, offset, err := parsePagination(r)
 	if err != nil {
@@ -88,7 +88,7 @@ func (h *NotebookHandler) List(w http.ResponseWriter, r *http.Request) {
 	})
 }
 
-// Get handles GET /api/v1/notebooks/{id}.
+// Get 处理 GET /api/v1/notebooks/{id}。
 func (h *NotebookHandler) Get(w http.ResponseWriter, r *http.Request) {
 	notebook, err := h.service.Get(r.Context(), chi.URLParam(r, "id"))
 	if err != nil {
@@ -99,7 +99,7 @@ func (h *NotebookHandler) Get(w http.ResponseWriter, r *http.Request) {
 	writeJSON(w, http.StatusOK, dataResponse{Data: toNotebookResponse(notebook)})
 }
 
-// Update handles PATCH /api/v1/notebooks/{id}.
+// Update 处理 PATCH /api/v1/notebooks/{id}。
 func (h *NotebookHandler) Update(w http.ResponseWriter, r *http.Request) {
 	var req updateNotebookRequest
 	if !h.decodeAndValidate(w, r, &req) {
@@ -126,7 +126,7 @@ func (h *NotebookHandler) Update(w http.ResponseWriter, r *http.Request) {
 	writeJSON(w, http.StatusOK, dataResponse{Data: toNotebookResponse(notebook)})
 }
 
-// Delete handles DELETE /api/v1/notebooks/{id}.
+// Delete 处理 DELETE /api/v1/notebooks/{id}。
 func (h *NotebookHandler) Delete(w http.ResponseWriter, r *http.Request) {
 	if err := h.service.Delete(r.Context(), chi.URLParam(r, "id")); err != nil {
 		writeError(w, r, h.log, err)
@@ -136,8 +136,7 @@ func (h *NotebookHandler) Delete(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusNoContent)
 }
 
-// decodeAndValidate decodes strictly (unknown fields are rejected), caps the
-// body size and runs transport-level validation.
+// decodeAndValidate 严格解码（拒绝未知字段）、限制请求体大小并执行传输层校验。
 func (h *NotebookHandler) decodeAndValidate(w http.ResponseWriter, r *http.Request, dst any) bool {
 	r.Body = http.MaxBytesReader(w, r.Body, maxRequestBodyBytes)
 

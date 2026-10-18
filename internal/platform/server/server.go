@@ -18,7 +18,7 @@ type Config struct {
 	ShutdownTimeout   time.Duration
 }
 
-// Server owns the http.Server lifecycle, including graceful shutdown.
+// Server 负责 http.Server 的生命周期，包括优雅关闭。
 type Server struct {
 	http            *http.Server
 	log             *slog.Logger
@@ -40,13 +40,13 @@ func New(cfg Config, handler http.Handler, log *slog.Logger) *Server {
 	}
 }
 
-// Run blocks until the server fails or ctx is cancelled, then shuts down
-// gracefully. Cancelling ctx is how SIGINT/SIGTERM propagate from main.
+// Run 阻塞直到 server 失败或 ctx 被取消，然后优雅关闭。取消 ctx 是
+// SIGINT/SIGTERM 从 main 传递进来的方式。
 func (s *Server) Run(ctx context.Context) error {
 	errCh := make(chan error, 1)
 
 	go func() {
-		s.log.Info("http server listening", "addr", s.http.Addr)
+		s.log.Info("HTTP server 开始监听", "addr", s.http.Addr)
 		errCh <- s.http.ListenAndServe()
 	}()
 
@@ -57,7 +57,7 @@ func (s *Server) Run(ctx context.Context) error {
 		}
 		return fmt.Errorf("listen and serve: %w", err)
 	case <-ctx.Done():
-		s.log.Info("shutting down http server", "timeout", s.shutdownTimeout.String())
+		s.log.Info("正在关闭 HTTP server", "timeout", s.shutdownTimeout.String())
 
 		shutdownCtx, cancel := context.WithTimeout(context.Background(), s.shutdownTimeout)
 		defer cancel()
@@ -65,7 +65,7 @@ func (s *Server) Run(ctx context.Context) error {
 		if err := s.http.Shutdown(shutdownCtx); err != nil {
 			return fmt.Errorf("graceful shutdown: %w", err)
 		}
-		s.log.Info("http server stopped")
+		s.log.Info("HTTP server 已停止")
 		return nil
 	}
 }

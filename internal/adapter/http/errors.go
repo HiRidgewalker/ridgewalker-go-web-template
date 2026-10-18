@@ -19,8 +19,8 @@ type errorPayload struct {
 	RequestID string            `json:"request_id,omitempty"`
 }
 
-// writeError maps domain sentinel errors to HTTP status codes. Anything that
-// is not a known domain error is treated as an internal error and is logged.
+// writeError 把 domain 哨兵错误映射为 HTTP 状态码。不是已知 domain 错误的，
+// 按内部错误处理并记录日志。
 func writeError(w http.ResponseWriter, r *http.Request, log *slog.Logger, err error) {
 	switch {
 	case errors.Is(err, domain.ErrValidation):
@@ -30,7 +30,7 @@ func writeError(w http.ResponseWriter, r *http.Request, log *slog.Logger, err er
 	case errors.Is(err, domain.ErrConflict):
 		writeErrorPayload(w, r, http.StatusConflict, "conflict", "resource conflict", nil)
 	default:
-		log.ErrorContext(r.Context(), "request failed",
+		log.ErrorContext(r.Context(), "请求处理失败",
 			"request_id", RequestIDFromContext(r.Context()),
 			"error", err,
 		)

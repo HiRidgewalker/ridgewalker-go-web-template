@@ -3,6 +3,5 @@ set -euo pipefail
 
 cd "$(dirname "$0")/.."
 
-# The application loads configs/.env itself; this script only exists so the
-# development command has a stable, discoverable entry point.
+# 应用自身会加载 configs/.env；本脚本只提供稳定、易发现的开发入口。
 exec go run ./cmd/api

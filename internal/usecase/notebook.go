@@ -13,14 +13,14 @@ const (
 	MaxPageSize     = 100
 )
 
-// CreateNotebookInput is the use case's own input type. HTTP DTOs are mapped
-// to it in the adapter layer, so transport concerns never leak inwards.
+// CreateNotebookInput 是 use case 自己的输入类型。HTTP DTO 在 adapter 层转换为
+// 它，传输层关注点不会向内泄漏。
 type CreateNotebookInput struct {
 	Title   string
 	Content string
 }
 
-// UpdateNotebookInput is a partial update; nil fields are unchanged.
+// UpdateNotebookInput 表示部分更新；nil 字段保持不变。
 type UpdateNotebookInput struct {
 	Title   *string
 	Content *string
@@ -31,9 +31,8 @@ type ListNotebooksInput struct {
 	Offset int
 }
 
-// NormalizePagination clamps page parameters to the values the service will
-// actually use. It is exported so adapters can report the same values in the
-// response metadata.
+// NormalizePagination 把分页参数收敛到服务实际使用的取值。导出它是为了让
+// adapter 能在响应元数据中报告同样的值。
 func NormalizePagination(limit, offset int) (int, int) {
 	if limit <= 0 {
 		limit = DefaultPageSize
@@ -47,8 +46,7 @@ func NormalizePagination(limit, offset int) (int, int) {
 	return limit, offset
 }
 
-// NotebookUseCase orchestrates notebook operations. It depends only on the
-// domain port and the standard library.
+// NotebookUseCase 编排 notebook 操作，只依赖 domain 端口与标准库。
 type NotebookUseCase struct {
 	repo domain.NotebookRepository
 	log  *slog.Logger
@@ -69,7 +67,7 @@ func (uc *NotebookUseCase) Create(ctx context.Context, in CreateNotebookInput) (
 		return nil, fmt.Errorf("create notebook: %w", err)
 	}
 
-	uc.log.InfoContext(ctx, "notebook created", "notebook_id", created.ID)
+	uc.log.InfoContext(ctx, "已创建笔记", "notebook_id", created.ID)
 	return created, nil
 }
 
@@ -109,7 +107,7 @@ func (uc *NotebookUseCase) Update(ctx context.Context, id string, in UpdateNoteb
 		return nil, fmt.Errorf("update notebook %q: %w", id, err)
 	}
 
-	uc.log.InfoContext(ctx, "notebook updated", "notebook_id", updated.ID)
+	uc.log.InfoContext(ctx, "已更新笔记", "notebook_id", updated.ID)
 	return updated, nil
 }
 
@@ -118,6 +116,6 @@ func (uc *NotebookUseCase) Delete(ctx context.Context, id string) error {
 		return fmt.Errorf("delete notebook %q: %w", id, err)
 	}
 
-	uc.log.InfoContext(ctx, "notebook deleted", "notebook_id", id)
+	uc.log.InfoContext(ctx, "已删除笔记", "notebook_id", id)
 	return nil
 }

@@ -13,10 +13,10 @@ import (
 	"github.com/limber/learning-go-web-notebook/internal/domain"
 )
 
-// TestNotebookRepositoryIntegration runs against a real PostgreSQL instance.
-// Set TEST_DATABASE_URL to enable it, for example:
+// TestNotebookRepositoryIntegration 针对真实 PostgreSQL 实例运行。设置
+// TEST_DATABASE_URL 以启用，例如：
 //
-//	TEST_DATABASE_URL='postgres://postgres:postgres@localhost:5432/learning_notebook_test?sslmode=disable' \
+//	TEST_DATABASE_URL='postgres://postgres:postgres@localhost:5432/ridgewalker_db?sslmode=disable' \
 //	  go test ./internal/adapter/postgres/...
 func TestNotebookRepositoryIntegration(t *testing.T) {
 	dsn := os.Getenv("TEST_DATABASE_URL")

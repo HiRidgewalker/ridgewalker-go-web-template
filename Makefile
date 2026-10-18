@@ -3,7 +3,7 @@ SHELL := /bin/bash
 APP     := api
 BIN_DIR := bin
 
-.PHONY: help run build test test-integration lint fmt vet tidy sqlc migrate-up migrate-down migrate-status migrate-create docker-up docker-down clean
+.PHONY: help run build test test-integration lint fmt vet tidy sqlc migrate-up migrate-down migrate-status migrate-create clean
 
 help: ## Show available targets
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "  \033[36m%-18s\033[0m %s\n", $$1, $$2}'
@@ -47,12 +47,6 @@ migrate-status: ## Show migration status (goose CLI)
 
 migrate-create: ## Create a migration: make migrate-create NAME=add_tags
 	./scripts/migrate.sh create $(NAME) sql
-
-docker-up: ## Start local PostgreSQL (localhost:5433)
-	docker compose up -d postgres
-
-docker-down: ## Stop local PostgreSQL
-	docker compose down
 
 clean: ## Remove build artifacts
 	rm -rf $(BIN_DIR) tmp

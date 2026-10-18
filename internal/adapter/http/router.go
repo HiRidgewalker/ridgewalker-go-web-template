@@ -14,12 +14,12 @@ type RouterOptions struct {
 	ReadinessCheck func(ctx context.Context) error
 }
 
-// NewRouter wires routes and middleware. Middleware order matters:
+// NewRouter 装配路由与中间件。中间件顺序很重要：
 //
 //	RequestID -> AccessLog -> Recoverer -> Timeout -> routes
 //
-// AccessLog sits outside Recoverer so a recovered panic is logged with the
-// final 500 status.
+// AccessLog 位于 Recoverer 外层，使恢复后的 panic 能带上最终的 500 状态码
+// 被记录。
 func NewRouter(handler *NotebookHandler, log *slog.Logger, opts RouterOptions) http.Handler {
 	r := chi.NewRouter()
 
@@ -66,7 +66,7 @@ func readyz(log *slog.Logger, check func(context.Context) error) http.HandlerFun
 		defer cancel()
 
 		if err := check(ctx); err != nil {
-			log.WarnContext(ctx, "readiness check failed", "error", err)
+			log.WarnContext(ctx, "就绪检查失败", "error", err)
 			writeJSON(w, http.StatusServiceUnavailable, map[string]string{"status": "unavailable"})
 			return
 		}

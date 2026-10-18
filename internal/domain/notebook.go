@@ -12,11 +12,10 @@ const (
 	MaxContentLength = 20000
 )
 
-// Notebook is the aggregate root of the notebook bounded context.
+// Notebook 是 notebook 限界上下文的聚合根。
 //
-// It deliberately contains only standard-library types so the domain stays
-// independent from HTTP, SQL and logging concerns. ID and timestamps are
-// assigned by the persistence adapter when the entity is first stored.
+// 它刻意只使用标准库类型，使 domain 不依赖 HTTP、SQL 与日志；ID 与时间戳在
+// 实体首次写入时由持久化 adapter 赋值。
 type Notebook struct {
 	ID        string
 	Title     string
@@ -25,7 +24,7 @@ type Notebook struct {
 	UpdatedAt time.Time
 }
 
-// NewNotebook validates and constructs a notebook.
+// NewNotebook 校验并构造 notebook。
 func NewNotebook(title, content string) (*Notebook, error) {
 	notebook := &Notebook{
 		Title:   strings.TrimSpace(title),
@@ -37,7 +36,7 @@ func NewNotebook(title, content string) (*Notebook, error) {
 	return notebook, nil
 }
 
-// Update applies a partial update: nil fields are left untouched.
+// Update 执行部分更新：nil 字段保持不变。
 func (n *Notebook) Update(title, content *string) error {
 	if title != nil {
 		n.Title = strings.TrimSpace(*title)

@@ -13,8 +13,7 @@ import (
 	"github.com/limber/learning-go-web-notebook/internal/domain"
 )
 
-// NotebookRepository implements domain.NotebookRepository with pgx and
-// sqlc-generated queries.
+// NotebookRepository 用 pgx 与 sqlc 生成的查询实现 domain.NotebookRepository。
 type NotebookRepository struct {
 	queries *sqlc.Queries
 }
@@ -101,8 +100,8 @@ func toDomainNotebook(row sqlc.Notebook) *domain.Notebook {
 	}
 }
 
-// mapPostgresError translates driver-level failures into domain sentinels so
-// upper layers can stay independent from PostgreSQL error codes.
+// mapPostgresError 把驱动层失败转换为 domain 哨兵错误，让上层不必依赖
+// PostgreSQL 错误码。
 func mapPostgresError(operation string, err error) error {
 	if errors.Is(err, pgx.ErrNoRows) {
 		return fmt.Errorf("%s: %w", operation, domain.ErrNotFound)
@@ -111,7 +110,7 @@ func mapPostgresError(operation string, err error) error {
 	var pgErr *pgconn.PgError
 	if errors.As(err, &pgErr) {
 		switch pgErr.Code {
-		case "22P02": // invalid_text_representation (e.g. malformed UUID)
+		case "22P02": // invalid_text_representation（例如 UUID 格式错误）
 			return fmt.Errorf("%s: %w: %s", operation, domain.ErrValidation, pgErr.Message)
 		case "23505": // unique_violation
 			return fmt.Errorf("%s: %w", operation, domain.ErrConflict)

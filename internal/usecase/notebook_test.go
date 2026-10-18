@@ -13,7 +13,7 @@ import (
 	"github.com/limber/learning-go-web-notebook/internal/usecase"
 )
 
-// memoryRepository is a fake domain.NotebookRepository used by unit tests.
+// memoryRepository 是单元测试使用的 domain.NotebookRepository 假实现。
 type memoryRepository struct {
 	items      map[string]*domain.Notebook
 	nextID     int

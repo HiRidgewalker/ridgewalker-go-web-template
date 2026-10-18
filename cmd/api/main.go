@@ -18,13 +18,13 @@ import (
 
 func main() {
 	if err := run(); err != nil {
-		slog.Error("application stopped with error", "error", err)
+		slog.Error("应用因错误停止", "error", err)
 		os.Exit(1)
 	}
 }
 
-// run is the composition root: it reads config, wires adapters and use cases
-// together, and hands control to the HTTP server. No business logic lives here.
+// run 是组合根：读取配置、装配 adapter 与 use case，然后把控制权交给 HTTP
+// server。业务逻辑不放在这里。
 func run() error {
 	cfg, err := config.Load()
 	if err != nil {
@@ -41,7 +41,7 @@ func run() error {
 	defer stop()
 
 	if cfg.DatabaseAutoMigrate {
-		log.Info("applying database migrations")
+		log.Info("正在应用数据库迁移")
 		if err := migrations.Run(cfg.DatabaseURL, log); err != nil {
 			return err
 		}

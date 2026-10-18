@@ -11,15 +11,14 @@ linters:
   settings:
     depguard:
       rules:
-        # The domain is the innermost layer: standard library only.
+        # domain 是最内层：只允许标准库。
         domain:
           files:
             - "**/internal/domain/*.go"
           allow:
             - $gostd
 
-        # Use cases may only depend on the domain and the standard library.
-        # The trailing $ allows external test packages to import themselves.
+        # use case 只能依赖 domain 与标准库。末尾的 $ 允许外部测试包导入自身。
         usecase:
           files:
             - "**/internal/usecase/*.go"
@@ -28,7 +27,7 @@ linters:
             - "github.com/limber/learning-go-web-notebook/internal/domain"
             - "github.com/limber/learning-go-web-notebook/internal/usecase$"
 
-        # HTTP adapter: transport libraries plus usecase/domain.
+        # HTTP adapter：传输层库加上 usecase/domain。
         adapter-http:
           files:
             - "**/internal/adapter/http/*.go"
@@ -40,8 +39,8 @@ linters:
             - "github.com/limber/learning-go-web-notebook/internal/usecase"
             - "github.com/limber/learning-go-web-notebook/internal/adapter/http$"
 
-        # PostgreSQL adapter: driver, sqlc output and domain only. Adaptors may
-        # not import each other.
+        # PostgreSQL adapter：只允许驱动、sqlc 生成代码与 domain。adapter
+        # 之间禁止互相导入。
         adapter-postgres:
           files:
             - "**/internal/adapter/postgres/*.go"

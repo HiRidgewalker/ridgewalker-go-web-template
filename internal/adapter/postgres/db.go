@@ -8,8 +8,7 @@ import (
 	"github.com/jackc/pgx/v5/pgxpool"
 )
 
-// NewPool parses the connection string, opens a pgx pool and verifies that the
-// database is reachable before the application starts accepting traffic.
+// NewPool 解析连接串、创建 pgx 连接池，并在应用开始接收流量前确认数据库可达。
 func NewPool(ctx context.Context, databaseURL string, maxConns int32) (*pgxpool.Pool, error) {
 	poolCfg, err := pgxpool.ParseConfig(databaseURL)
 	if err != nil {

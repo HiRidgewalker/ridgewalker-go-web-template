@@ -36,8 +36,7 @@
 ├── configs/.env.example            # 本地环境变量模板
 ├── scripts/                        # dev / migrate 脚本
 ├── sqlc.yaml
-├── Makefile
-└── docker-compose.yml              # 本地 PostgreSQL（5433）
+└── Makefile
 ```
 
 ### 依赖方向（由 depguard 约束）
@@ -55,23 +54,9 @@ domain         → 仅标准库
 ### 1. 前置条件
 
 - Go 1.27+（`brew install go`）
-- PostgreSQL 16（本机 5432，或使用 `make docker-up` 启动 5433）
+- 本机已在运行的 PostgreSQL 16（`localhost:5432`），且已存在 `ridgewalker_db` 数据库
 
-### 2. 创建数据库
-
-推荐使用项目自带的 compose（账号/密码均为 `postgres`，自动创建 `learning_notebook`）：
-
-```bash
-make docker-up
-```
-
-如果改用本机已有的 PostgreSQL，请自行创建数据库并调整 `DATABASE_URL` 端口：
-
-```bash
-psql -U postgres -c "CREATE DATABASE learning_notebook;"
-```
-
-### 3. 配置环境变量
+### 2. 配置环境变量
 
 ```bash
 cp configs/.env.example configs/.env
@@ -80,18 +65,18 @@ cp configs/.env.example configs/.env
 默认连接串：
 
 ```text
-postgres://postgres:postgres@localhost:5433/learning_notebook?sslmode=disable
+postgres://postgres:postgres@localhost:5432/ridgewalker_db?sslmode=disable
 ```
 
-项目自带的 compose 服务映射到 **5433**，避免与本机已有的 5432 实例冲突。如果你使用已有的 5432 实例，请先在那边创建 `learning_notebook` 数据库，再把端口改回 5432。
+直接使用已有的 `ridgewalker_db`，无需创建数据库；账号、密码或端口不同时修改 `configs/.env` 中的 `DATABASE_URL`。
 
-### 4. 启动
+### 3. 启动
 
 ```bash
 make run
 ```
 
-服务默认监听 `:8080`。首次启动会自动执行 goose 迁移（`DATABASE_AUTO_MIGRATE=true`）。
+服务默认监听 `:8080`。首次启动会自动执行 goose 迁移（`DATABASE_AUTO_MIGRATE=true`），迁移记录写入 `learning_go_web_notebook_goose_db_version` 表。
 
 ```bash
 curl http://localhost:8080/healthz
@@ -196,18 +181,18 @@ make fmt               # gofmt
 make sqlc              # 修改 db/queries 后重新生成代码
 make migrate-up        # goose 手动执行迁移
 make migrate-status    # 查看迁移状态
-make docker-up         # 启动本地 PostgreSQL（5433）
 ```
 
 ### 集成测试
 
+`TEST_DATABASE_URL` 指向一个已存在的数据库，无需新建：
+
 ```bash
-docker exec postgresql psql -U postgres -c "CREATE DATABASE learning_notebook_test;"
-TEST_DATABASE_URL='postgres://postgres:postgres@localhost:5432/learning_notebook_test?sslmode=disable' \
+TEST_DATABASE_URL='postgres://postgres:postgres@localhost:5432/ridgewalker_db?sslmode=disable' \
   make test-integration
 ```
 
-未设置 `TEST_DATABASE_URL` 时，该测试会自动跳过。
+该测试会清空目标库的 `notebooks` 表，禁止指向生产库。未设置 `TEST_DATABASE_URL` 时，该测试会自动跳过。
 
 ## 开发说明
 
@@ -244,6 +229,6 @@ air
 ```bash
 docker build -t learning-go-web-notebook .
 docker run --rm -p 8080:8080 \
-  -e DATABASE_URL='postgres://postgres:postgres@host.docker.internal:5432/learning_notebook?sslmode=disable' \
+  -e DATABASE_URL='postgres://postgres:postgres@host.docker.internal:5432/ridgewalker_db?sslmode=disable' \
   learning-go-web-notebook
 ```

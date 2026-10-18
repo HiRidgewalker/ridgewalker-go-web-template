@@ -8,8 +8,8 @@ import (
 	"github.com/joho/godotenv"
 )
 
-// Config is populated from environment variables. The defaults match the
-// local Docker Compose setup (postgres/postgres on localhost:5433).
+// Config 由环境变量填充。默认值连接本机已有的 ridgewalker_db
+// （localhost:5432 上的 postgres/postgres）。
 type Config struct {
 	Env      string `env:"APP_ENV" envDefault:"development"`
 	LogLevel string `env:"LOG_LEVEL" envDefault:"info"`
@@ -22,13 +22,13 @@ type Config struct {
 	HTTPRequestTimeout    time.Duration `env:"HTTP_REQUEST_TIMEOUT" envDefault:"15s"`
 	ShutdownTimeout       time.Duration `env:"SHUTDOWN_TIMEOUT" envDefault:"10s"`
 
-	DatabaseURL         string `env:"DATABASE_URL" envDefault:"postgres://postgres:postgres@localhost:5433/learning_notebook?sslmode=disable"`
+	DatabaseURL         string `env:"DATABASE_URL" envDefault:"postgres://postgres:postgres@localhost:5432/ridgewalker_db?sslmode=disable"`
 	DatabaseMaxConns    int32  `env:"DATABASE_MAX_CONNS" envDefault:"10"`
 	DatabaseAutoMigrate bool   `env:"DATABASE_AUTO_MIGRATE" envDefault:"true"`
 }
 
-// Load reads configs/.env when present and then applies environment variables.
-// A missing .env file is fine: real deployments set variables directly.
+// Load 在存在 configs/.env 时读取它，然后应用环境变量。缺少 .env 文件没有
+// 问题：真实部署直接设置环境变量。
 func Load() (Config, error) {
 	_ = godotenv.Load("configs/.env")
 

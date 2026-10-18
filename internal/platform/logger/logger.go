@@ -7,8 +7,8 @@ import (
 	"strings"
 )
 
-// New builds the application logger. Development uses human-readable text;
-// production uses structured JSON so log collectors can parse it.
+// New 构造应用 logger。开发环境使用人类可读的文本格式；生产环境使用结构化
+// JSON，便于日志采集器解析。
 func New(environment, level string) (*slog.Logger, error) {
 	var logLevel slog.Level
 	if err := logLevel.UnmarshalText([]byte(strings.ToUpper(level))); err != nil {

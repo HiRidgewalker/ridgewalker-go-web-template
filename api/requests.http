@@ -1,13 +1,13 @@
 @baseUrl = http://localhost:8080
 @notebookId = replace-with-created-id
 
-### Health check
+### 健康检查
 GET {{baseUrl}}/healthz
 
-### Readiness check (pings PostgreSQL)
+### 就绪检查（探测 PostgreSQL）
 GET {{baseUrl}}/readyz
 
-### Create a notebook
+### 创建笔记
 POST {{baseUrl}}/api/v1/notebooks
 Content-Type: application/json
 
@@ -16,13 +16,13 @@ Content-Type: application/json
   "content": "Hello, Go Web!"
 }
 
-### List notebooks
+### 列出笔记
 GET {{baseUrl}}/api/v1/notebooks?limit=20&offset=0
 
-### Get one notebook
+### 获取单篇笔记
 GET {{baseUrl}}/api/v1/notebooks/{{notebookId}}
 
-### Partially update a notebook
+### 部分更新笔记
 PATCH {{baseUrl}}/api/v1/notebooks/{{notebookId}}
 Content-Type: application/json
 
@@ -30,5 +30,5 @@ Content-Type: application/json
   "title": "更新后的标题"
 }
 
-### Delete a notebook
+### 删除笔记
 DELETE {{baseUrl}}/api/v1/notebooks/{{notebookId}}

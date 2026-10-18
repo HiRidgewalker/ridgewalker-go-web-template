@@ -2,11 +2,10 @@ package domain
 
 import "errors"
 
-// Sentinel errors shared across layers.
+// 跨层共享的哨兵错误。
 //
-// The domain defines what went wrong in business terms; adapters decide how to
-// present that to their transport (e.g. HTTP status codes). Callers should use
-// errors.Is so adapters can wrap these errors with context.
+// domain 用业务语言说明出了什么问题；adapter 决定如何在自己的传输层呈现
+// （例如 HTTP 状态码）。调用方用 errors.Is 判断，adapter 可以为其附加上下文。
 var (
 	ErrNotFound   = errors.New("resource not found")
 	ErrConflict   = errors.New("resource conflict")

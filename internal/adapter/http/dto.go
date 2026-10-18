@@ -12,7 +12,7 @@ import (
 	"github.com/limber/learning-go-web-notebook/internal/domain"
 )
 
-// request DTOs ---------------------------------------------------------------
+// 请求 DTO -------------------------------------------------------------------
 
 type createNotebookRequest struct {
 	Title   string `json:"title" validate:"required,max=200"`
@@ -24,7 +24,7 @@ type updateNotebookRequest struct {
 	Content *string `json:"content" validate:"omitempty,max=20000"`
 }
 
-// response DTOs --------------------------------------------------------------
+// 响应 DTO -------------------------------------------------------------------
 
 type notebookResponse struct {
 	ID        string    `json:"id"`
@@ -59,10 +59,10 @@ type listMeta struct {
 	Total  int64 `json:"total"`
 }
 
-// helpers --------------------------------------------------------------------
+// 辅助函数 -------------------------------------------------------------------
 
-// NewValidator builds the transport-layer validator. Field names reported in
-// error details use the JSON name rather than the Go struct field name.
+// NewValidator 构造传输层 validator。错误详情中的字段名使用 JSON 名称，而不是
+// Go 结构体字段名。
 func NewValidator() *validator.Validate {
 	v := validator.New(validator.WithRequiredStructEnabled())
 	v.RegisterTagNameFunc(func(field reflect.StructField) string {

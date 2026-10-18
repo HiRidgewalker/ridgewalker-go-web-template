@@ -17,4 +17,4 @@ fi
 
 : "${DATABASE_URL:?DATABASE_URL is required}"
 
-goose -dir db/migrations postgres "$DATABASE_URL" "$@"
+goose -dir db/migrations -table learning_go_web_notebook_goose_db_version postgres "$DATABASE_URL" "$@"
