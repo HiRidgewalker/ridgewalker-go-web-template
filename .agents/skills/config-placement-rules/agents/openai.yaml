@@ -1,0 +1,9 @@
+interface:
+  display_name: "config-placement-rules"
+  short_description: "判定每个可变值放在环境变量、configs/.env、常量还是就地字面量，并统一读取与启动校验"
+policy:
+  allow_implicit_invocation: true
+  products:
+    - "chatgpt"
+    - "codex"
+    - "api"

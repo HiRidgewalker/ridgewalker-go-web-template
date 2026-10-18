@@ -1,0 +1,2 @@
+# 需求
+参考 github 项目`https://github.com/golang-standards/project-layout`, 改写.agents/skills 下的一些 skill,这些 skill 有一部分是针对 python 和 fastapi 项目进行编写的,你需要改写成适合当前 go 语言和对应技术栈的 agent skill, skill 的编写规范需要参考 `AGENTS.md` 中的规则, 先在 plan 中给出哪些 skill 需要更改,如何更改,参照的什么标准,我确认后才会执行

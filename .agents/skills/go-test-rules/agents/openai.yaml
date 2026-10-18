@@ -1,0 +1,9 @@
+interface:
+  display_name: "go-test-rules"
+  short_description: "需求显式要求测试或修复缺陷时，按规则编写并执行 go test 用例，覆盖单元测试、httptest 接口测试与 PostgreSQL 集成测试"
+policy:
+  allow_implicit_invocation: true
+  products:
+    - "chatgpt"
+    - "codex"
+    - "api"

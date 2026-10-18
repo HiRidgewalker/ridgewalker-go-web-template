@@ -1,0 +1,9 @@
+interface:
+  display_name: "go-web-project-rules"
+  short_description: "按 cmd/internal/adapter 分层组织 Go Web 项目，统一 chi 路由、pgx 与 sqlc 数据访问、goose 迁移、配置装配与错误日志边界"
+policy:
+  allow_implicit_invocation: true
+  products:
+    - "chatgpt"
+    - "codex"
+    - "api"
