@@ -1,0 +1,65 @@
+version: "2"
+
+run:
+  timeout: 5m
+
+linters:
+  default: standard
+  enable:
+    - depguard
+    - misspell
+  settings:
+    depguard:
+      rules:
+        # The domain is the innermost layer: standard library only.
+        domain:
+          files:
+            - "**/internal/domain/*.go"
+          allow:
+            - $gostd
+
+        # Use cases may only depend on the domain and the standard library.
+        # The trailing $ allows external test packages to import themselves.
+        usecase:
+          files:
+            - "**/internal/usecase/*.go"
+          allow:
+            - $gostd
+            - "github.com/limber/learning-go-web-notebook/internal/domain"
+            - "github.com/limber/learning-go-web-notebook/internal/usecase$"
+
+        # HTTP adapter: transport libraries plus usecase/domain.
+        adapter-http:
+          files:
+            - "**/internal/adapter/http/*.go"
+          allow:
+            - $gostd
+            - "github.com/go-chi/chi/v5"
+            - "github.com/go-playground/validator/v10"
+            - "github.com/limber/learning-go-web-notebook/internal/domain"
+            - "github.com/limber/learning-go-web-notebook/internal/usecase"
+            - "github.com/limber/learning-go-web-notebook/internal/adapter/http$"
+
+        # PostgreSQL adapter: driver, sqlc output and domain only. Adaptors may
+        # not import each other.
+        adapter-postgres:
+          files:
+            - "**/internal/adapter/postgres/*.go"
+            - "**/internal/adapter/postgres/sqlc/*.go"
+          allow:
+            - $gostd
+            - "github.com/jackc/pgx/v5"
+            - "github.com/limber/learning-go-web-notebook/internal/domain"
+            - "github.com/limber/learning-go-web-notebook/internal/adapter/postgres"
+            - "github.com/limber/learning-go-web-notebook/db/migrations$"
+
+  exclusions:
+    rules:
+      - path: "internal/adapter/postgres/sqlc/"
+        linters:
+          - revive
+          - errcheck
+
+formatters:
+  enable:
+    - gofmt
